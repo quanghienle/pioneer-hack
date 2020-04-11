@@ -22,6 +22,7 @@ import ProfileIcon from "@material-ui/icons/Person";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 
 // import ItemList from "./ItemList";
+import FocusPage from "./FocusPage"
 
 const drawerWidth = 250;
 
@@ -183,7 +184,7 @@ export default function MiniDrawer() {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {/* <ItemList /> */}
+        <FocusPage />
       </main>
     </div>
   );
