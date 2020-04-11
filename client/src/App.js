@@ -1,7 +1,13 @@
 import React from "react";
 import SignIn from "./components/SignIn";
+<<<<<<< Updated upstream
 import SignUp from "./components/SignUp";
 import Main from "./components/Main";
+=======
+import SignUp from "./components/SignUp"
+import Home from "./components/Home"
+import FocusPage from "./components/FocusPage"
+>>>>>>> Stashed changes
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 class App extends React.Component {
@@ -41,6 +47,9 @@ class App extends React.Component {
             </Route>
             <Route path="/signin">
               <SignIn />
+            </Route>
+            <Route path="/focuspage">
+              <FocusPage />
             </Route>
           </Switch>
         </div>
