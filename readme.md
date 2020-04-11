@@ -16,6 +16,8 @@ This is the first commit
   - All in `./client/`
   - Run client
 
-    `$ npm install` (maybe)
+    `$ cd client`
 
-    `$ cd client && yarn start`
+    `$ npm install`
+
+    `$ npm start`
