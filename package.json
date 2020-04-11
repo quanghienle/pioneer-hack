@@ -1,0 +1,23 @@
+{
+  "name": "pioneer-hack",
+  "version": "1.0.0",
+  "description": "pioneer hackathon 2020",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quanghienle/pioneer-hack.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quanghienle/pioneer-hack/issues"
+  },
+  "homepage": "https://github.com/quanghienle/pioneer-hack#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
