@@ -1,4 +1,6 @@
 import React from "react";
+import RTCMesh from 'react-rtc-real';
+require('react-rtc-real/assets/index.css');
 
 class FocusPage extends React.Component {
   state = {
@@ -7,13 +9,7 @@ class FocusPage extends React.Component {
 
 
   render() {
-    return (
-        <div>
-            <p>
-                Hello World
-            </p>
-        </div>
-    );
+    return <RTCMesh URL="wss://d5075207.ngrok.io"/>;
   }
 }
 

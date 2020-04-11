@@ -20,9 +20,15 @@ import HistoryIcon from "@material-ui/icons/History";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ProfileIcon from "@material-ui/icons/Person";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
+import HomeIcon from "@material-ui/icons/Home";
+import { Link } from "react-router-dom";
 
-// import ItemList from "./ItemList";
-import FocusPage from "./FocusPage"
+import FocusPage from "./FocusPage";
+import TrendingPage from "./TrendingPage";
+import HistoryPage from "./HistoryPage";
+import ProfilePage from "./ProfilePage";
+import SettingsPage from "./SettingsPage";
+
 
 const drawerWidth = 250;
 
@@ -87,10 +93,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// SideBar contents
+// including name, icon, and the page the will appear when on-licked
+const sideContents = [
+  { text: "Home", icon: HomeIcon, page: FocusPage },
+  { text: "Trending", icon: TrendingUpIcon, page: TrendingPage},
+  { text: "History", icon: HistoryIcon, page: HistoryPage },
+  { text: "Settings", icon: SettingsIcon, page: SettingsPage },
+  { text: "Profile", icon: ProfileIcon, page: ProfilePage }
+];
+
 export default function MiniDrawer() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [currPage, setCurrPage] = React.useState(sideContents[0]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -122,7 +139,7 @@ export default function MiniDrawer() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap align="center">
-            HOME
+            {currPage.text.toUpperCase()}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -146,45 +163,28 @@ export default function MiniDrawer() {
         </div>
         <Divider />
         <List>
-          <ListItem button key="trending">
-            <ListItemIcon>
-              <TrendingUpIcon />
-            </ListItemIcon>
-            <ListItemText primary="Trending" />
-          </ListItem>
+          {sideContents.map((item) => {
+            return (
+              <ListItem button key={item.text} onClick={() => setCurrPage(item)}>
+                <ListItemIcon>
+                  <item.icon />
+                </ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItem>
+            );
+          })}
 
-          <ListItem button key="history">
-            <ListItemIcon>
-              <HistoryIcon />
-            </ListItemIcon>
-            <ListItemText primary="History" />
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          <ListItem button key="settings">
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItem>
-          <ListItem button key="profile">
-            <ListItemIcon>
-              <ProfileIcon />
-            </ListItemIcon>
-            <ListItemText primary="Profile" />
-          </ListItem>
-          <ListItem button key="logout">
+          <ListItem button key="logout" component={Link} to="/signin">
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
-            <ListItemText primary="Log out" />
+            <ListItemText primary="Log Out" />
           </ListItem>
         </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <FocusPage />
+        <currPage.page />
       </main>
     </div>
   );
