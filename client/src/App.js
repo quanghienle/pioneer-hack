@@ -3,7 +3,7 @@ import SignIn from "./components/SignIn";
 
 
 import SignUp from "./components/SignUp"
-import Home from "./components/Home"
+import Main from "./components/Main"
 import FocusPage from "./components/FocusPage"
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
