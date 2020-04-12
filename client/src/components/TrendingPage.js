@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
   gridList: {
     width: "80%",
+    height: "90%"
   },
   icon: {
     color: "rgba(255, 255, 255, 0.54)",
@@ -28,9 +29,10 @@ export default function TrendingPage() {
   const trendingList = []
   for (let i=0; i<50; i++){
     trendingList.push({
-      img: "//source.unsplash.com/random",
+      img:
+        "//techcrunch.com/wp-content/uploads/2019/06/GettyImages-1010650972.jpg?w=730&crop=1",
       title: "Something Fun",
-      author: "Hien Le"
+      author: "Hien Le",
     });
   }
 

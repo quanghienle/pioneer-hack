@@ -8,7 +8,7 @@ class HistoryPage extends React.Component {
   render() {
     return (
       <div>
-        <p>Profile Page</p>
+        <p>History Page</p>
       </div>
     );
   }
