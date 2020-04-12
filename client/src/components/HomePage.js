@@ -4,84 +4,99 @@ import Switch from "@material-ui/core/Switch";
 // import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
 import DataBaseService from "../services/DatabaseService";
-import { OTSession, OTPublisher, OTStreams, OTSubscriber, createSession } from "opentok-react";
-import OpenTok from "opentok";
+import { OT, OTPublisher, OTStreams, OTSubscriber, createSession } from "opentok-react";
 
-const API_KEY = '46669582';
-const API_SECRET = '37f03285211c392e937134e247402affbc997ace';
-var opentok = new OpenTok(API_KEY, API_SECRET);
+// import "./HomePage.css"
+import Config from "./tokConfig"
 
 export default function HomePage() {
   const [camera, setCamera] = React.useState(false);
   const [intervalID, setIntervalID] = React.useState(null);
-  const [timeLeft, setTimeLeft] = React.useState(90*60000);
+  const [timeLeft, setTimeLeft] = React.useState(90 * 60000);
   const [sessionId, setSessionId] = React.useState(null);
+  const [sessionHelper, setSessonHelper] = React.useState({ session: null });
+  const [streams, setStreams] = React.useState([]);
   const dbService = new DataBaseService();
 
-  var [PublisherSessionId, setPublisherSessionId] = React.useState(null);
-  var [PublisherToken, setPublisherToken] = React.useState(null);
+  //   var [PublisherSessionId, setPublisherSessionId] = React.useState(null);
+  //   var [PublisherToken, setPublisherToken] = React.useState(null);
 
   const triggerTimer = () => {
-    let startTime = timeLeft
+    let startTime = timeLeft;
     const inter = setInterval(() => {
-        startTime -= 1000
+      startTime -= 1000;
       setTimeLeft(startTime);
     }, 1000);
-    setIntervalID(inter)
+    setIntervalID(inter);
+  };
+
+  //   const createSessionID = async () => {
+  //     let sessionId = null;
+  //     const res = await callBackendAPI()
+
+  //     console.log(res.sessionId)
+  //   };
+
+  const callBackendAPI = async () => {
+    const response = await fetch("/sessionId");
+    const body = await response.json();
+
+    if (response.status !== 200) {
+      throw Error(body.message);
+    }
+    return body;
   };
 
   const onStream = async () => {
+    const res = await callBackendAPI();
+    const helper = createSession({
+      apiKey: res.apiKey,
+      sessionId: res.sessionId,
+      token: res.token,
+      onStreamsUpdated: (strms) => {
+        setStreams({ strms });
+      },
+    });
+    console.log(streams);
+    // const publisher = OT.initPublisher("myPublisherElementId", { width: 400, height: 300 });
+    // helper.properties = { width: 400, height: 300 } 
+    setSessonHelper(helper);
     setCamera(!camera);
-    setSessionId(await opentok.createSession({}, function(error, session) {
-                          if (error) {
-                            console.log("Error creating session:", error)
-                          } else {
-                            PublisherSessionId = session.sessionId;
-                            //  Use the role value appropriate for the user:
-                            var tokenOptions = {};
-                            tokenOptions.role = "publisher";
-                            tokenOptions.data = "username=bob";
-                            // Generate a token.
-                            PublisherToken = opentok.generateToken(PublisherSessionId, tokenOptions);
-                          }
-                        }));
-  }
+  };
 
   const onStart = async () => {
     triggerTimer();
-    setSessionId(await dbService.startSession('gLee2t2VQm6agqSrlQjI', 3600, 300));
-  }
-
+    setSessionId(await dbService.startSession("gLee2t2VQm6agqSrlQjI", 3600, 300));
+  };
 
   const onExit = () => {
     dbService.finishSession(sessionId, true);
-    clearInterval(intervalID) 
-  }
+    clearInterval(intervalID);
+  };
 
   const formatTime = () => {
     const formatDigits = (myNumber) => ("0" + myNumber).slice(-2);
     const m = formatDigits(Math.floor(timeLeft / 1000 / 60));
     const s = formatDigits(Math.floor((timeLeft / 1000) % 60));
-    return m + " : " + s
+    return m + " : " + s;
   };
 
   return (
     <div>
-      {/* <FormControlLabel
-        control={
-          <Switch
-            checked={camera}
-            onChange={() => setCamera(!camera)}
-            color="primary"
-            name="Webcam"
-            inputProps={{ "aria-label": "primary checkbox" }}
-          />
-        }
-        label="Show Camera"
-      /> */}
-      <div style={{ textAlign: "center" }}>{camera ? <Webcam width="60%" /> : null}</div>
+      <div style={{ display: "flex", justifyContent: "flex-end", height: "300px" }}>
+        {camera ? (
+          <OTPublisher session={sessionHelper.session} properties={{ width: 150, height: 150 }} />
+        ) : null}
+      </div>
 
-      <div style={{ textAlign: "center", fontSize: "50px", height: "150px", lineHeight: "150px" }}>
+      <div
+        style={{
+          textAlign: "center",
+          fontSize: "50px",
+          height: "150px",
+          lineHeight: "150px",
+        }}
+      >
         {timeLeft ? formatTime() : null}
       </div>
 
@@ -95,7 +110,7 @@ export default function HomePage() {
         }}
       >
         <Button variant="contained" size="large" color="primary" onClick={onStream}>
-          Stream
+          Stream {camera ? "OFF" : "ON"}
         </Button>
         <Button variant="contained" size="large" color="primary">
           Track

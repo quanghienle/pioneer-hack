@@ -11,21 +11,21 @@ class App extends React.Component {
     data: null,
   };
 
-  // componentDidMount() {
-  //   this.callBackendAPI()
-  //     .then((res) => console.log(res.express))
-  //     .catch((err) => console.log(err));
-  // }
+  componentDidMount() {
+    this.callBackendAPI()
+      .then((res) => console.log(res.express))
+      .catch((err) => console.log(err));
+  }
 
-  // callBackendAPI = async () => {
-  //   const response = await fetch("/express_backend");
-  //   const body = await response.json();
+  callBackendAPI = async () => {
+    const response = await fetch("/express_backend");
+    const body = await response.json();
 
-  //   if (response.status !== 200) {
-  //     throw Error(body.message);
-  //   }
-  //   return body;
-  // };
+    if (response.status !== 200) {
+      throw Error(body.message);
+    }
+    return body;
+  };
 
   render() {
     return (

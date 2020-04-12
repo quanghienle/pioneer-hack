@@ -19,6 +19,7 @@
   "homepage": "https://github.com/quanghienle/pioneer-hack#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "opentok": "^2.9.2",
     "react-rtc-real": "^1.11.22"
   }
 }
