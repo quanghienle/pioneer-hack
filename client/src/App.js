@@ -3,8 +3,17 @@ import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp"
 import Main from "./components/Main"
 import FocusPage from "./components/FocusPage"
-
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import {
+  SAMPLE_SERVER_BASE_URL,
+  API_KEY,
+  SESSION_ID,
+  TOKEN,
+  PROVIDER_TOKEN
+} from './components/config';
+
+
 
 class App extends React.Component {
   state = {
@@ -28,6 +37,12 @@ class App extends React.Component {
   };
 
   render() {
+    const credentials = {
+              apiKey: API_KEY,
+              sessionId: SESSION_ID,
+              token: TOKEN,
+              providerToken: PROVIDER_TOKEN
+              }; 
     return (
       <Router>
         <div>
@@ -45,7 +60,7 @@ class App extends React.Component {
               <SignIn />
             </Route>
             <Route path="/focuspage">
-              <FocusPage />
+              <FocusPage credentials={credentials} />
             </Route>
           </Switch>
         </div>
