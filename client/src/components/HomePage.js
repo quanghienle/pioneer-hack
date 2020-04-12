@@ -7,6 +7,7 @@ import DataBaseService from "../services/DatabaseService";
 import { OT, OTPublisher, OTStreams, OTSubscriber, createSession } from "opentok-react";
 import OpentokService from "../services/OpentokService";
 import AuthService from "../services/AuthService";
+import Typography from "@material-ui/core/Typography";
 
 // import "./HomePage.css"
 import { Config } from "./tokConfig";
@@ -72,6 +73,12 @@ export default function HomePage() {
 
   return (
     <div>
+      <Typography variant="h3" noWrap align="center">
+        This is the title
+      </Typography>
+      <Typography variant="h6" noWrap align="center">
+        - author
+      </Typography>
       <div style={{ display: "flex", justifyContent: "flex-end", height: "300px" }}>
         {camera ? (
           <OTPublisher session={sessionHelper.session} properties={{ width: 150, height: 150 }} />
@@ -98,7 +105,13 @@ export default function HomePage() {
           maxWidth: 600,
         }}
       >
-        <Button variant="contained" size="large" color="primary" onClick={onStream} disabled={active}>
+        <Button
+          variant="contained"
+          size="large"
+          color="primary"
+          onClick={onStream}
+          disabled={active}
+        >
           Stream {camera ? "OFF" : "ON"}
         </Button>
         <Button variant="contained" size="large" color="primary">
