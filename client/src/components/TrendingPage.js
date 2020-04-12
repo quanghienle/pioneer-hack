@@ -23,9 +23,8 @@ const useStyles = makeStyles((theme) => ({
 export default function TrendingPage() {
   const classes = useStyles();
   const dbService = new DataBaseService();
-  const [streams, setStreams] = React.useState([
-
-  ]);
+  const [streams, setStreams] = React.useState([]);
+  const [fetched, setFetched] = React.useState(false);
 
   const fetchData = async () => {
     const trendingList = [];
@@ -39,10 +38,11 @@ export default function TrendingPage() {
     });
     setStreams(trendingList);
     console.log(allSess);
+    setFetched(true);
   };
 
   React.useEffect(() => {
-    if (streams.length === 0) {
+    if (!fetched) {
       fetchData();
     }
   });

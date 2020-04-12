@@ -33,7 +33,7 @@ export default class DataBaseService {
     const userRef = this.db.collection("users").doc(uid);
     try {
       const doc = await userRef.get();
-      return doc.data();
+      return {uid, ...doc.data()};
     } catch(err) {
       console.console(err);
     }
@@ -56,13 +56,13 @@ export default class DataBaseService {
     }
   }
 
-  async startSession(uid, duration, restDuration) {
+  async startSession(uid, sessionId, token) {
     try {
-      const sessionRef = await this.db.collection("sessions").add({
+      const sessionRef = await this.db.collection("sessions").doc(sessionId).set({
         streamer: uid,
         startTime: firebase.firestore.Timestamp.fromDate(new Date()),
-        duration,
-        restDuration,
+        token: token,
+        endTime: null,
         watchSessions: [],
         views: 0,
         likes: 0,

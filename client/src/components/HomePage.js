@@ -5,31 +5,34 @@ import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
 import DataBaseService from "../services/DatabaseService";
 import { OT, OTPublisher, OTStreams, OTSubscriber, createSession } from "opentok-react";
-import OpentokService from "../services/OpentokService"
+import OpentokService from "../services/OpentokService";
+import AuthService from "../services/AuthService";
 
 // import "./HomePage.css"
-import { Config } from "./tokConfig"
+import { Config } from "./tokConfig";
 
 const { API_KEY, API_SECRET } = Config;
 
 export default function HomePage() {
   const [camera, setCamera] = React.useState(false);
   const [intervalID, setIntervalID] = React.useState(null);
-  const [timeLeft, setTimeLeft] = React.useState(90 * 60000);
+  const [timeStudied, setTimeStudied] = React.useState(0);
   const [sessionId, setSessionId] = React.useState(null);
   const [sessionHelper, setSessonHelper] = React.useState({ session: null });
   const [streams, setStreams] = React.useState([]);
   const dbService = new DataBaseService();
   const otService = new OpentokService();
+  const authService = new AuthService();
+  const [active, setActive] = React.useState(false);
 
   //   var [PublisherSessionId, setPublisherSessionId] = React.useState(null);
   //   var [PublisherToken, setPublisherToken] = React.useState(null);
 
   const triggerTimer = () => {
-    let startTime = timeLeft;
+    let startTime = 0;
     const inter = setInterval(() => {
-      startTime -= 1000;
-      setTimeLeft(startTime);
+      startTime += 1000;
+      setTimeStudied(startTime);
     }, 1000);
     setIntervalID(inter);
   };
@@ -52,6 +55,8 @@ export default function HomePage() {
 //   };
 
   const onStream = async () => {
+    setActive(true);
+    const userInfo = await authService.getCurrentUserInfo();
     const { sessionId, token } = await otService.createSession();
 
     const helper = createSession({
@@ -60,29 +65,29 @@ export default function HomePage() {
       token: token,
       onStreamsUpdated: (strms) => {
         setStreams({ strms });
-        console.log(strms);
       },
     });
     // const publisher = OT.initPublisher("myPublisherElementId", { width: 400, height: 300 });
     // helper.properties = { width: 400, height: 300 } 
     setSessonHelper(helper);
-    setCamera(!camera);
-  };
-
-  const onStart = async () => {
+    setCamera(true);
     triggerTimer();
-    setSessionId(await dbService.startSession("gLee2t2VQm6agqSrlQjI", 3600, 300));
+    
+    await dbService.startSession(userInfo.uid, sessionId, token);
+    setSessionId(sessionId);
   };
 
   const onExit = () => {
     dbService.finishSession(sessionId, true);
     clearInterval(intervalID);
+    setActive(false);
+    setCamera(false);
   };
 
   const formatTime = () => {
     const formatDigits = (myNumber) => ("0" + myNumber).slice(-2);
-    const m = formatDigits(Math.floor(timeLeft / 1000 / 60));
-    const s = formatDigits(Math.floor((timeLeft / 1000) % 60));
+    const m = formatDigits(Math.floor(timeStudied / 1000 / 60));
+    const s = formatDigits(Math.floor((timeStudied / 1000) % 60));
     return m + " : " + s;
   };
 
@@ -102,7 +107,7 @@ export default function HomePage() {
           lineHeight: "150px",
         }}
       >
-        {timeLeft ? formatTime() : null}
+        {timeStudied ? formatTime() : null}
       </div>
 
       <div
@@ -114,14 +119,11 @@ export default function HomePage() {
           maxWidth: 600,
         }}
       >
-        <Button variant="contained" size="large" color="primary" onClick={onStream}>
+        <Button variant="contained" size="large" color="primary" onClick={onStream} disabled={active}>
           Stream {camera ? "OFF" : "ON"}
         </Button>
         <Button variant="contained" size="large" color="primary">
           Track
-        </Button>
-        <Button variant="contained" size="large" color="primary" onClick={onStart}>
-          Start
         </Button>
         <Button variant="contained" size="large" color="primary" onClick={onExit}>
           Exit
