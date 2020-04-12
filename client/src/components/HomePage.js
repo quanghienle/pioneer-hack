@@ -41,9 +41,12 @@ export default function HomePage() {
     const { sessionId, token } = await otService.createSession();
 
     const helper = createSession({
-      apiKey: API_KEY,
-      sessionId: sessionId,
-      token: token,
+      apiKey: Config.API_KEY,
+      sessionId: Config.SESSION_ID,
+      token: Config.TOKEN,
+      // apiKey: API_KEY,
+      // sessionId: sessionId,
+      // token: token,
       onStreamsUpdated: (strms) => {
         setStreams(strms);
       },
@@ -79,6 +82,16 @@ export default function HomePage() {
       <Typography variant="h6" noWrap align="center">
         - author
       </Typography>
+      {streams.map((stream) => {
+        return (
+          <OTSubscriber
+            key={stream.id}
+            session={sessionHelper.session}
+            stream={stream}
+            properties={{ width: 300, height: 300 }}
+          />
+        );
+      })}
       <div style={{ display: "flex", justifyContent: "flex-end", height: "300px" }}>
         {camera ? (
           <OTPublisher session={sessionHelper.session} properties={{ width: 150, height: 150 }} />

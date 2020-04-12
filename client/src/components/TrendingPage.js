@@ -81,15 +81,15 @@ export default function TrendingPage() {
 
           return (
             <GridListTile key={"trending#" + index}>
-              <OTPublisher
+              {/* <OTPublisher
                 session={helper.session}
                 properties={{ width: 200, height: 200 }}
-              />
-            {/*<img
+              /> */}
+            <img
                 src={session.img}
                 alt={session.title}
                 onClick={() => imgOnclick(session.id, session.token)}
-              />*/}
+              />
               <GridListTileBar title={session.title} subtitle={<span>by: {session.author}</span>} />
             </GridListTile>
           );
