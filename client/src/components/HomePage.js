@@ -25,9 +25,6 @@ export default function HomePage() {
   const authService = new AuthService();
   const [active, setActive] = React.useState(false);
 
-  //   var [PublisherSessionId, setPublisherSessionId] = React.useState(null);
-  //   var [PublisherToken, setPublisherToken] = React.useState(null);
-
   const triggerTimer = () => {
     let startTime = 0;
     const inter = setInterval(() => {
@@ -36,23 +33,6 @@ export default function HomePage() {
     }, 1000);
     setIntervalID(inter);
   };
-
-  //   const createSessionID = async () => {
-  //     let sessionId = null;
-  //     const res = await callBackendAPI()
-
-  //     console.log(res.sessionId)
-  //   };
-
-//   const callBackendAPI = async () => {
-//     const response = await fetch("/sessionId");
-//     const body = await response.json();
-
-//     if (response.status !== 200) {
-//       throw Error(body.message);
-//     }
-//     return body;
-//   };
 
   const onStream = async () => {
     setActive(true);
@@ -64,11 +44,9 @@ export default function HomePage() {
       sessionId: sessionId,
       token: token,
       onStreamsUpdated: (strms) => {
-        setStreams({ strms });
+        setStreams(strms);
       },
     });
-    // const publisher = OT.initPublisher("myPublisherElementId", { width: 400, height: 300 });
-    // helper.properties = { width: 400, height: 300 } 
     setSessonHelper(helper);
     setCamera(true);
     triggerTimer();
@@ -82,6 +60,7 @@ export default function HomePage() {
     clearInterval(intervalID);
     setActive(false);
     setCamera(false);
+    setTimeStudied(0);
   };
 
   const formatTime = () => {
