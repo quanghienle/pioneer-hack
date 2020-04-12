@@ -3,8 +3,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
+import { OT, OTPublisher, OTStreams, OTSubscriber, createSession } from "opentok-react";
 
 import DataBaseService from "../services/DatabaseService";
+
+import { Config } from "./tokConfig";
+
+const { API_KEY, API_SECRET } = Config;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,8 +28,10 @@ const useStyles = makeStyles((theme) => ({
 export default function TrendingPage() {
   const classes = useStyles();
   const dbService = new DataBaseService();
-  const [streams, setStreams] = React.useState([]);
+  const [streamers, setStreamers] = React.useState([]);
   const [fetched, setFetched] = React.useState(false);
+  const [sessionHelper, setSessonHelper] = React.useState({ session: null });
+  const [streams, setStreams] = React.useState([]);
 
   const fetchData = async () => {
     const trendingList = [];
@@ -32,11 +39,13 @@ export default function TrendingPage() {
     allSess.forEach((s) => {
       trendingList.push({
         img: "//source.unsplash.com/random",
+        id: s.id,
+        token: s.data.token,
         title: s.data.title || "Title Not Found",
         author: s.data.streamer,
       });
     });
-    setStreams(trendingList);
+    setStreamers(trendingList);
     console.log(allSess);
     setFetched(true);
   };
@@ -47,19 +56,35 @@ export default function TrendingPage() {
     }
   });
 
-  const imgOnclick = () => {
-  //   await fetchData();
-  };
 
   return (
     <div className={classes.root}>
       <GridList cellHeight={300} className={classes.gridList}>
-        {streams.map((session, index) => (
-          <GridListTile key={"trending#" + index}>
-            <img src={session.img} alt={session.title} onClick={imgOnclick} />
-            <GridListTileBar title={session.title} subtitle={<span>by: {session.author}</span>} />
-          </GridListTile>
-        ))}
+        {streamers.map((session, index) => {
+          const helper = createSession({
+            apiKey: API_KEY,
+            sessionId: session.id,
+            token: session.token,
+            onStreamsUpdated: (strms) => {
+              // setStreams(strms);
+            },
+          });
+
+          return (
+            <GridListTile key={"trending#" + index}>
+              <OTPublisher
+                session={helper.session}
+                properties={{ width: 200, height: 200 }}
+              />
+              {/* <img
+                src={session.img}
+                alt={session.title}
+                // onClick={() => imgOnclick(session.id, session.token)}
+              /> */}
+              <GridListTileBar title={session.title} subtitle={<span>by: {session.author}</span>} />
+            </GridListTile>
+          );
+        })}
       </GridList>
     </div>
   );
