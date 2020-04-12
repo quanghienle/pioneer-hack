@@ -41,15 +41,15 @@ export default function HomePage() {
   //     console.log(res.sessionId)
   //   };
 
-  const callBackendAPI = async () => {
-    const response = await fetch("/sessionId");
-    const body = await response.json();
+//   const callBackendAPI = async () => {
+//     const response = await fetch("/sessionId");
+//     const body = await response.json();
 
-    if (response.status !== 200) {
-      throw Error(body.message);
-    }
-    return body;
-  };
+//     if (response.status !== 200) {
+//       throw Error(body.message);
+//     }
+//     return body;
+//   };
 
   const onStream = async () => {
     const { sessionId, token } = await otService.createSession();

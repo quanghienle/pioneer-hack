@@ -108,7 +108,7 @@ export default function MiniDrawer() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [currPage, setCurrPage] = React.useState(sideContents[0]);
+  const [currPage, setCurrPage] = React.useState(sideContents[1]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
