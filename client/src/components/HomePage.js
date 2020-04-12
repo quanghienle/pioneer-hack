@@ -5,9 +5,12 @@ import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
 import DataBaseService from "../services/DatabaseService";
 import { OT, OTPublisher, OTStreams, OTSubscriber, createSession } from "opentok-react";
+import OpentokService from "../services/OpentokService"
 
 // import "./HomePage.css"
-import Config from "./tokConfig"
+import { Config } from "./tokConfig"
+
+const { API_KEY, API_SECRET } = Config;
 
 export default function HomePage() {
   const [camera, setCamera] = React.useState(false);
@@ -17,6 +20,7 @@ export default function HomePage() {
   const [sessionHelper, setSessonHelper] = React.useState({ session: null });
   const [streams, setStreams] = React.useState([]);
   const dbService = new DataBaseService();
+  const otService = new OpentokService();
 
   //   var [PublisherSessionId, setPublisherSessionId] = React.useState(null);
   //   var [PublisherToken, setPublisherToken] = React.useState(null);
@@ -48,16 +52,17 @@ export default function HomePage() {
   };
 
   const onStream = async () => {
-    const res = await callBackendAPI();
+    const { sessionId, token } = await otService.createSession();
+
     const helper = createSession({
-      apiKey: res.apiKey,
-      sessionId: res.sessionId,
-      token: res.token,
+      apiKey: API_KEY,
+      sessionId: sessionId,
+      token: token,
       onStreamsUpdated: (strms) => {
         setStreams({ strms });
+        console.log(strms);
       },
     });
-    console.log(streams);
     // const publisher = OT.initPublisher("myPublisherElementId", { width: 400, height: 300 });
     // helper.properties = { width: 400, height: 300 } 
     setSessonHelper(helper);
