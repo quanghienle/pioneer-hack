@@ -9,6 +9,8 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import AuthService from "../services/AuthService";
+import { withRouter } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,8 +43,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+export default withRouter(({ history }) => {
   const classes = useStyles();
+  const [ email, setEmail ] = React.useState("");
+  const [ password, setPassword ] = React.useState("");
+  const authService = new AuthService();
+
+  const onSignIn = async () => {
+    const userInfo = await authService.signIn(email, password);
+    console.log(userInfo);
+    history.push('/home');
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -66,6 +77,8 @@ export default function SignInSide() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -77,15 +90,17 @@ export default function SignInSide() {
               label="Password"
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              href="/home"
+              onClick={onSignIn}
+              //href="/home"
             >
               Sign In
             </Button>
@@ -99,4 +114,4 @@ export default function SignInSide() {
       </Grid>
     </Grid>
   );
-}
+});

@@ -1,13 +1,13 @@
 import firebase from 'firebase'
-var firebaseConfig = {
-  apiKey: "AIzaSyDbstxZYopUVfkqv1QGRsTH8T0a3NoocMY",
-  authDomain: "pioneer-hack.firebaseapp.com",
-  databaseURL: "https://pioneer-hack.firebaseio.com",
-  projectId: "pioneer-hack",
-  storageBucket: "pioneer-hack.appspot.com",
-  messagingSenderId: "933064029885",
-  appId: "1:933064029885:web:c75afd6dac7119c36b69d4",
-  measurementId: "G-KTVZXVSZ6H"
+const firebaseConfig = {
+  apiKey: "AIzaSyA633JIJABbbQeldYwNn7H9FTnAo-BPGy4",
+  authDomain: "focus-stream-d64a2.firebaseapp.com",
+  databaseURL: "https://focus-stream-d64a2.firebaseio.com",
+  projectId: "focus-stream-d64a2",
+  storageBucket: "focus-stream-d64a2.appspot.com",
+  messagingSenderId: "156165224472",
+  appId: "1:156165224472:web:3c9046bdc75380b584eb6d",
+  measurementId: "G-09B5E5Y5ME"
 };
 var fire = firebase.initializeApp(firebaseConfig);
 export default fire;

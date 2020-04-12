@@ -9,6 +9,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { withRouter } from 'react-router-dom';
+import AuthService from '../services/AuthService';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,8 +32,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default withRouter(({ history }) => {
   const classes = useStyles();
+  const [ firstName, setFirstName ] = React.useState("");
+  const [ lastName, setLastName ] = React.useState("");
+  const [ email, setEmail ] = React.useState("");
+  const [ password, setPassword ] = React.useState("");
+  const authService = new AuthService();
+
+  const onSignUp = async () => {
+    await authService.signUp(`${firstName} ${lastName}`, email, password);
+    history.push('/home');
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -54,6 +66,8 @@ export default function SignUp() {
                 fullWidth
                 id="firstName"
                 label="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
                 autoFocus
               />
             </Grid>
@@ -65,6 +79,8 @@ export default function SignUp() {
                 id="lastName"
                 label="Last Name"
                 name="lastName"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
                 autoComplete="lname"
               />
             </Grid>
@@ -75,6 +91,8 @@ export default function SignUp() {
                 fullWidth
                 id="email"
                 label="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 name="email"
                 autoComplete="email"
               />
@@ -88,16 +106,18 @@ export default function SignUp() {
                 label="Password"
                 type="password"
                 id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
               />
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={onSignUp}
           >
             Sign Up
           </Button>
@@ -110,4 +130,4 @@ export default function SignUp() {
       </div>
     </Container>
   );
-}
+});

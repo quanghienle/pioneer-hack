@@ -35,16 +35,16 @@ export default class DataBaseService {
     return;
   }
 
-  async createUser(username) {
+  async createUser(uid, displayName, email) {
     try {
-      const userRef = await this.db.collection("users").add({
-        username,
+      await this.db.collection("users").doc(uid).set({
+        name: displayName,
+        email,
         numFollowers: 0,
         numFollowings: 0 
       });
-      return userRef.id;
     } catch(err) {
-      console.log("Error creating new user")
+      console.log(err)
     }
   }
 
