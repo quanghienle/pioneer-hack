@@ -1,5 +1,5 @@
 import React from "react";
-import RTCMesh from 'react-rtc-real';
+// import RTCMesh from 'react-rtc-real';
 require('react-rtc-real/assets/index.css');
 
 class FocusPage extends React.Component {

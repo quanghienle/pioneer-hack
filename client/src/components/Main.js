@@ -23,11 +23,12 @@ import LogoutIcon from "@material-ui/icons/ExitToApp";
 import HomeIcon from "@material-ui/icons/Home";
 import { Link } from "react-router-dom";
 
-import FocusPage from "./FocusPage";
+// import FocusPage from "./FocusPage";
 import TrendingPage from "./TrendingPage";
 import HistoryPage from "./HistoryPage";
 import ProfilePage from "./ProfilePage";
 import SettingsPage from "./SettingsPage";
+import HomePage from "./HomePage"
 
 
 const drawerWidth = 250;
@@ -96,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 // SideBar contents
 // including name, icon, and the page the will appear when on-licked
 const sideContents = [
-  { text: "Home", icon: HomeIcon, page: FocusPage },
+  { text: "Home", icon: HomeIcon, page: HomePage },
   { text: "Trending", icon: TrendingUpIcon, page: TrendingPage},
   { text: "History", icon: HistoryIcon, page: HistoryPage },
   { text: "Settings", icon: SettingsIcon, page: SettingsPage },
