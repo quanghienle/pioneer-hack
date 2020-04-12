@@ -1,10 +1,12 @@
 import fire from '../firebase';
+import firebase from 'firebase';
 
 import { Follow, LiveSession, User } from '../models/models';
 
-export class DataBaseService {
+export default class DataBaseService {
   constructor() {
     this.db = fire.firestore();
+    this.activeSession = null;
   }
 
   async saveSession(session) {
@@ -20,7 +22,7 @@ export class DataBaseService {
   }
 
   async getUserInfo(uid) {
-    const userRef = db.collection("users").doc(uid);
+    const userRef = this.db.collection("users").doc(uid);
     try {
       const userInfo = await userRef.get();
       return userInfo;
@@ -40,18 +42,17 @@ export class DataBaseService {
         numFollowers: 0,
         numFollowings: 0 
       });
+      return userRef.id;
     } catch(err) {
       console.log("Error creating new user")
     }
-    
-    return userRef.id;
   }
 
   async startSession(uid, duration, restDuration) {
     try {
       const sessionRef = await this.db.collection("sessions").add({
         streamer: uid,
-        startTime: db.Timestamp.fromDate(new Date()),
+        startTime: firebase.firestore.Timestamp.fromDate(new Date()),
         duration,
         restDuration,
         watchSessions: [],
@@ -60,22 +61,29 @@ export class DataBaseService {
         completed: false,
         status: "running"
       });
-      return sessionRef.id;
+      this.activeSession = sessionRef.id;
     } catch(err) {
-      console.err("Unable to create a new session.");
+      console.log(err);
+      console.log("Unable to create a new session.");
     }
-  }
-
-  async pauseSession(sessionId) {
-
   }
 
   /**
    * Finish a session (complete or not) 
    * @param {boolean} complete 
    */
-  finishSession(sessionId, complete) {
-
+  async finishSession(sessionId, completed) {
+    try {
+      const sessionRef = await this.db.collection("sessions").doc(sessionId).set({
+        completed,
+        status: "finished"
+      });
+      return sessionRef.id;
+    } catch(err) {
+      console.log(err);
+      console.log("Unable to create a new session.");
+    }
+    console.log("Progress saved")
   }
 
   toggleLike(uid, sessionId) {

@@ -9,5 +9,5 @@ var firebaseConfig = {
   appId: "1:933064029885:web:c75afd6dac7119c36b69d4",
   measurementId: "G-KTVZXVSZ6H"
 };
-var fire = firebase.initializeApp(config);
+var fire = firebase.initializeApp(firebaseConfig);
 export default fire;
