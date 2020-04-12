@@ -31,31 +31,40 @@ export default function TrendingPage() {
   const [streamers, setStreamers] = React.useState([]);
   const [fetched, setFetched] = React.useState(false);
   const [sessionHelper, setSessonHelper] = React.useState({ session: null });
-  const [streams, setStreams] = React.useState([]);
 
   const fetchData = async () => {
-    const trendingList = [];
     const allSess = await dbService.getRunningSessions();
-    allSess.forEach((s) => {
-      trendingList.push({
-        img: "//source.unsplash.com/random",
-        id: s.id,
-        token: s.data.token,
-        title: s.data.title || "Title Not Found",
-        author: s.data.streamer,
-      });
-    });
-    setStreamers(trendingList);
-    console.log(allSess);
+    onStreamingListUpdate(allSess);
     setFetched(true);
   };
 
   React.useEffect(() => {
     if (!fetched) {
       fetchData();
+      dbService.subscribeRunningSessions(onStreamingListUpdate);
     }
   });
 
+  const onStreamingListUpdate = async (runningSessions) => {
+    const trendingList = [];
+    for (const s of runningSessions) {
+      if (s.streamer) {
+        const userInfo = await dbService.getUserInfo(s.streamer);
+        trendingList.push({
+          img: "//source.unsplash.com/random",
+          title: s.title || "Title Not Found",
+          id: s.id,
+          token: s.token,
+          author: userInfo.name,
+        });
+      }
+    }
+    setStreamers(trendingList);
+  };
+
+  const imgOnclick = () => {
+  //   await fetchData();
+  };
 
   return (
     <div className={classes.root}>
@@ -66,7 +75,7 @@ export default function TrendingPage() {
             sessionId: session.id,
             token: session.token,
             onStreamsUpdated: (strms) => {
-              // setStreams(strms);
+               setStreamers(strms);
             },
           });
 
@@ -76,11 +85,11 @@ export default function TrendingPage() {
                 session={helper.session}
                 properties={{ width: 200, height: 200 }}
               />
-              {/* <img
+            {/*<img
                 src={session.img}
                 alt={session.title}
-                // onClick={() => imgOnclick(session.id, session.token)}
-              /> */}
+                onClick={() => imgOnclick(session.id, session.token)}
+              />*/}
               <GridListTileBar title={session.title} subtitle={<span>by: {session.author}</span>} />
             </GridListTile>
           );

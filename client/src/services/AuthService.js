@@ -31,6 +31,7 @@ export default class AuthService {
   async getCurrentUserInfo() {
     try {
       const { uid } = this.auth.currentUser;
+      console.log(`uid: ${uid}`);
       return await this.dbService.getUserInfo(uid);
     } catch(error) {
       console.log(error);

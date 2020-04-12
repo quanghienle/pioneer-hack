@@ -18,25 +18,37 @@ export default class DataBaseService {
   }
 
   async getRunningSessions() {
-    const allSess = [];
-    const sess = await this.db.collection("sessions").get();
+    const runningSess = [];
+    const sess = await this.db.collection("sessions").where("status", "==", "running").get();
 
     sess.forEach((doc) => {
-      allSess.push({ id: doc.id, data: doc.data() });
+      runningSess.push({ id: doc.id, data: doc.data() });
     });
-
-    const runningSess = allSess.filter(s => s.data.status==='running')
     return runningSess;
   }
 
   async getUserInfo(uid) {
-    const userRef = this.db.collection("users").doc(uid);
+    console.log(uid);
     try {
+      const userRef = this.db.collection("users").doc(uid);
       const doc = await userRef.get();
       return {uid, ...doc.data()};
     } catch(err) {
-      console.console(err);
+      console.log(err);
     }
+  }
+
+  subscribeRunningSessions(onUpdate) {
+    this.db.collection("sessions").where("status", "==", "running")
+    .onSnapshot(function(querySnapshot) {
+      const runningSess = [];
+      querySnapshot.forEach(s => {
+        runningSess.push({ id: s.id, ...s.data() });
+      });
+      console.log("Running session update");
+      onUpdate(runningSess);
+    });
+
   }
 
   updateUserInfo(userInfo) {
@@ -56,11 +68,12 @@ export default class DataBaseService {
     }
   }
 
-  async startSession(uid, sessionId, token) {
+  async startSession(uid, sessionId, token, title="Focus") {
     try {
       const sessionRef = await this.db.collection("sessions").doc(sessionId).set({
         streamer: uid,
         startTime: firebase.firestore.Timestamp.fromDate(new Date()),
+        title,
         token: token,
         endTime: null,
         watchSessions: [],
@@ -84,6 +97,7 @@ export default class DataBaseService {
     try {
       const sessionRef = await this.db.collection("sessions").doc(sessionId).set(
         {
+          startTime: firebase.firestore.Timestamp.fromDate(new Date()),
           completed,
           status: "finished",
         },
