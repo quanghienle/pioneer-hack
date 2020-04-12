@@ -3,8 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
-import IconButton from "@material-ui/core/IconButton";
-import InfoIcon from "@material-ui/icons/Info";
+
+import DataBaseService from "../services/DatabaseService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,44 +16,51 @@ const useStyles = makeStyles((theme) => ({
   },
   gridList: {
     width: "80%",
-    height: "90%"
-  },
-  icon: {
-    color: "rgba(255, 255, 255, 0.54)",
+    height: "90%",
   },
 }));
 
 export default function TrendingPage() {
   const classes = useStyles();
+  const dbService = new DataBaseService();
+  const [streams, setStreams] = React.useState([
 
-  const trendingList = []
-  for (let i=0; i<50; i++){
-    trendingList.push({
-      img:
-        "//techcrunch.com/wp-content/uploads/2019/06/GettyImages-1010650972.jpg?w=730&crop=1",
-      title: "Something Fun",
-      author: "Hien Le",
+  ]);
+
+  const fetchData = async () => {
+    const trendingList = [];
+    const allSess = await dbService.getRunningSessions();
+    allSess.forEach((s) => {
+      trendingList.push({
+        img: "//source.unsplash.com/random",
+        title: s.data.title || "Title Not Found",
+        author: s.data.streamer,
+      });
     });
-  }
+    setStreams(trendingList);
+    console.log(allSess);
+  };
+
+  React.useEffect(() => {
+    if (streams.length === 0) {
+      fetchData();
+    }
+  });
+
+  const imgOnclick = () => {
+  //   await fetchData();
+  };
 
   return (
     <div className={classes.root}>
       <GridList cellHeight={300} className={classes.gridList}>
-        {trendingList.map((session, index) => (
+        {streams.map((session, index) => (
           <GridListTile key={"trending#" + index}>
-            <img src={session.img} alt={session.title}/>
-            <GridListTileBar
-              title={session.title}
-              subtitle={<span>by: {session.author}</span>}
-              actionIcon={
-                <IconButton aria-label={`info about ${session.title}`} className={classes.icon}>
-                  <InfoIcon />
-                </IconButton>
-              }
-            />
+            <img src={session.img} alt={session.title} onClick={imgOnclick} />
+            <GridListTileBar title={session.title} subtitle={<span>by: {session.author}</span>} />
           </GridListTile>
         ))}
       </GridList>
     </div>
   );
-};
+}
