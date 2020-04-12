@@ -9,6 +9,7 @@ export default function HomePage() {
   const [camera, setCamera] = React.useState(false);
   const [intervalID, setIntervalID] = React.useState(null);
   const [timeLeft, setTimeLeft] = React.useState(90*60000);
+  const [sessionId, setSessionId] = React.useState(null);
   const dbService = new DataBaseService();
 
   const triggerTimer = () => {
@@ -20,14 +21,14 @@ export default function HomePage() {
     setIntervalID(inter)
   };
 
-  const onStart = () => {
-    dbService.startSession('gLee2t2VQm6agqSrlQjI', 3600, 300);
+  const onStart = async () => {
     triggerTimer();
+    setSessionId(await dbService.startSession('gLee2t2VQm6agqSrlQjI', 3600, 300));
   }
 
 
-  const pauseTimer = () => {
-    dbService.finishSession(dbService.activeSession, true);
+  const onExit = () => {
+    dbService.finishSession(sessionId, true);
     clearInterval(intervalID) 
   }
 
@@ -76,8 +77,8 @@ export default function HomePage() {
         <Button variant="contained" size="large" color="primary" onClick={onStart}>
           Start
         </Button>
-        <Button variant="contained" size="large" color="primary" onClick={pauseTimer}>
-          Pause
+        <Button variant="contained" size="large" color="primary" onClick={onExit}>
+          Exit
         </Button>
       </div>
     </div>

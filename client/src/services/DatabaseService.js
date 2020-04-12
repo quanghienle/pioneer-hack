@@ -61,7 +61,7 @@ export default class DataBaseService {
         completed: false,
         status: "running"
       });
-      this.activeSession = sessionRef.id;
+      return sessionRef.id;
     } catch(err) {
       console.log(err);
       console.log("Unable to create a new session.");
@@ -77,13 +77,12 @@ export default class DataBaseService {
       const sessionRef = await this.db.collection("sessions").doc(sessionId).set({
         completed,
         status: "finished"
-      });
-      return sessionRef.id;
+      }, { merge: true });
+      console.log("Progress saved")
     } catch(err) {
       console.log(err);
       console.log("Unable to create a new session.");
     }
-    console.log("Progress saved")
   }
 
   toggleLike(uid, sessionId) {
