@@ -24,8 +24,8 @@ export default class DataBaseService {
   async getUserInfo(uid) {
     const userRef = this.db.collection("users").doc(uid);
     try {
-      const userInfo = await userRef.get();
-      return userInfo;
+      const doc = await userRef.get();
+      return doc.data();
     } catch(err) {
       console.err("Error getting user info!");
     }
