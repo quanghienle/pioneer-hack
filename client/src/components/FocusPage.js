@@ -9,7 +9,11 @@ class FocusPage extends React.Component {
 
 
   render() {
-    return <RTCMesh URL="wss://d5075207.ngrok.io"/>;
+    return (
+      <div>
+        <p>Focus Page</p>
+      </div>
+    );
   }
 }
 
