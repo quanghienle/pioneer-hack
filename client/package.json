@@ -15,7 +15,7 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react-rtc-real": "^1.11.22",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.1",
     "react-webcam": "^5.0.1"
   },
   "scripts": {
